@@ -23,38 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(), debugShowCheckedModeBanner: false,
+      home: GridViewPage(), debugShowCheckedModeBanner: false,
     );
   }
-}
-
-class HomePage extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('GrideView', style: TextStyle(fontWeight: FontWeight.bold),),
-        backgroundColor: Colors.amber,
-      ),
-      body: ListView(
-        children:<Widget>[
-          Container(
-            alignment: Alignment.center,
-            child: Icon(Icons.account_balance, size: 190.0,),
-          ),
-          Container(
-            child: MaterialButton(
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> GridViewPage()));
-              },
-              color: Colors.amber,
-              child: Text('GridView', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-            ),
-          )
-        ],
-      )
-    );
-    throw UnimplementedError();
-  }
-
 }
