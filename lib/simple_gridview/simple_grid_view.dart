@@ -1,26 +1,16 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter4_2/simple_gridview/simple_detail_view.dart';
 import 'package:flutter4_2/ui_view/detail_view.dart';
-import 'package:flutter4_2/simple_gridview/simple_grid_view.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 
-class GridViewPage extends StatefulWidget {
-  GridViewPage({Key key}) : super(key: key);
-  _GridViewPage createState() => _GridViewPage();
+class SimpleGridView extends StatefulWidget {
+  const SimpleGridView({Key key}) : super(key: key);
+
+  @override
+  _SimpleGridViewState createState() => _SimpleGridViewState();
 }
 
-const List<Key> keys = [
-  Key("Netwrok"),
-  Key("NetworkDialog"),
-  Key("Flare"),
-  Key("FlareDialog"),
-  Key("Asset"),
-  Key("AssetDialog"),
-];
-
-class _GridViewPage extends State<GridViewPage> {
-  List<Container> daftarMotor = new List();
+class _SimpleGridViewState extends State<SimpleGridView> {
   var itemDaftarMotor = [
     {
       "nama": "Honda XR150L",
@@ -114,102 +104,80 @@ class _GridViewPage extends State<GridViewPage> {
     }
   ];
 
-  _DataListMotor() async {
-    for (var i = 0; i < itemDaftarMotor.length; i++) {
-      final dataMotor = itemDaftarMotor[i];
-      final String gambarMotor = dataMotor["gambar"];
-
-      daftarMotor.add(new Container(
-        padding: EdgeInsets.all(10.0),
-        child: Card(
-          child: new InkWell(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (_) => AssetGiffyDialog(
-                  image: Image.asset(
-                    'gambar/$gambarMotor',
-                    fit: BoxFit.cover,
-                  ),
-                  title: Text(
-                    dataMotor['nama'],
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                  ),
-                  description: Text(
-                    dataMotor['keterangan'],
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20.0),
-                  ),
-                  onOkButtonPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailViewPage(
-                                  dnama: dataMotor['nama'],
-                                  dgambar: dataMotor['gambar'],
-                                  dketerangan: dataMotor['keterangan'],
-                                )));
-                  },
-                ),
-              );
-            },
-            child: new Column(
-              children: <Widget>[
-                new Hero(
-                  tag: dataMotor["nama"],
-                  child: Image.asset(
-                    'gambar/$gambarMotor',
-                    fit: BoxFit.contain,
-                    width: 100.0,
-                    height: 85.0,
-                  ),
-                ),
-                new Padding(padding: EdgeInsets.all(10.0)),
-                new Text(dataMotor['nama'])
-              ],
-            ),
-          ),
-        ),
-      ));
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _DataListMotor();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('GridView'),
+        title: Text("Simple Grid View"),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: daftarMotor,
+      body: GridView.builder(
+        itemCount: itemDaftarMotor.length,
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemBuilder: (context, index) {
+          final dataMotor = itemDaftarMotor[index];
+          final String gambarMotor = dataMotor["gambar"];
+          return Container(
+            padding: EdgeInsets.all(10.0),
+            child: Card(
+              child: new InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AssetGiffyDialog(
+                      image: Image.asset(
+                        'gambar/$gambarMotor',
+                        fit: BoxFit.cover,
+                      ),
+                      title: Text(
+                        dataMotor['nama'],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22.0),
+                      ),
+                      description: Text(
+                        dataMotor['keterangan'],
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      onOkButtonPressed: () {
+                        // Close Dialog
+                        Navigator.pop(context);
+                        // Continue to the next page
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => SimpleDetailView(
+                            bundleDataMotor: dataMotor,
+                          ),
+                        ));
+                      },
+                    ),
+                  );
+                },
+                child: new Column(
+                  children: <Widget>[
+                    new Hero(
+                      tag: dataMotor["nama"],
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                        ),
+                        child: Image.asset(
+                          'gambar/$gambarMotor',
+                          fit: BoxFit.cover,
+                          height: 100.0,
+                          width: MediaQuery.of(context).size.width,
+                        ),
+                      ),
+                    ),
+                    new Padding(padding: EdgeInsets.all(10.0)),
+                    new Text(dataMotor['nama'])
+                  ],
+                ),
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 45,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => SimpleGridView()));
-                },
-                child: Text("Simple Grid View"),
-              ),
-            )
-          ],
-        ),
+          );
+        },
       ),
     );
   }

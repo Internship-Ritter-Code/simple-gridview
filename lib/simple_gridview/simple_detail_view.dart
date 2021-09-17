@@ -1,15 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-class DetailViewPage extends StatefulWidget {
-  String dnama, dgambar, dketerangan;
-  DetailViewPage({this.dnama, this.dgambar, this.dketerangan});
+class SimpleDetailView extends StatelessWidget {
+  final bundleDataMotor;
+  const SimpleDetailView({Key key, this.bundleDataMotor}) : super(key: key);
 
-  _DetailViewPage createState() => _DetailViewPage();
-}
-
-class _DetailViewPage extends State<DetailViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,19 +15,19 @@ class _DetailViewPage extends State<DetailViewPage> {
           Container(
             height: 240,
             child: new Hero(
-                tag: widget.dnama,
+                tag: bundleDataMotor['nama'],
                 child: new Material(
                   child: InkWell(
                     child: Image.asset(
-                      'gambar/${widget.dgambar}',
+                      'gambar/${bundleDataMotor["gambar"]}',
                       fit: BoxFit.contain,
                     ),
                   ),
                 )),
           ),
-          new BagianNama(nama: widget.dnama),
+          new BagianNama(nama: bundleDataMotor['nama']),
           new BagianKeterangan(
-            keterangan: widget.dketerangan,
+            keterangan: bundleDataMotor['keterangan'],
           )
         ],
       ),
